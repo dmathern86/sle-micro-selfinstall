@@ -1,0 +1,28 @@
+variant: fcos
+version: 1.4.0
+passwd:
+  users:
+    - name: root
+      password_hash: "$6$93XNlZ/y9Qx.bcQj$/X0ZD/JEN1TmCzTy9xsBMztY9xEpwdUZYzdXHquesrxSdiO/R9TXYyJgsA3G9yEJbdSNdahwKL2.PoSr/JJXm1"
+storage:
+  files:
+    - path: /etc/hostname
+      mode: 0644
+      overwrite: true
+      contents:
+        inline: "sle-micro1"
+  links:
+    - path: /etc/localtime
+      overwrite: true
+      target: /usr/share/zoneinfo/Europe/Berlin
+
+systemd:
+  units:
+    - name: sshd.service
+      enabled: true
+
+kernel_arguments:
+  should_exist:
+    - mitigations=off
+  should_not_exist:
+    - mitigations=auto,nosmt
