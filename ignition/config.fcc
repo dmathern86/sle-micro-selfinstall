@@ -24,5 +24,6 @@ systemd:
 kernel_arguments:
   should_exist:
     - mitigations=off
+    - selinux=0
   should_not_exist:
     - mitigations=auto,nosmt
