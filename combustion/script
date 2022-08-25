@@ -4,9 +4,6 @@ exec > >(exec tee -a /dev/tty0) 2>&1
 
 echo "Configured with combustion" > /etc/issue.d/combustion
 
-# Mount /home, so user creation works right
-mount /home
-
 ## Disable IPv6
 cp 90-disableipv6.conf /etc/sysctl.d/
 
