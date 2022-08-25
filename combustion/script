@@ -1,0 +1,40 @@
+#!/bin/bash
+
+exec > >(exec tee -a /dev/tty0) 2>&1
+
+echo "Configured with combustion" > /etc/issue.d/combustion
+
+# Mount /home, so user creation works right
+mount /home
+
+## Disable IPv6
+cp 90-disableipv6.conf /etc/sysctl.d/
+
+##Set Keyboardlayout to de
+cp vconsole.conf /etc/
+
+##Configure Snapper
+cp root /etc/snapper/configs/root
+# network configuration
+cat <<EOF > /etc/sysconfig/network/ifcfg-eth0
+DEVICE='eth0'
+BOOTPROTO='dhcp'
+STARTMODE='auto'
+EOF
+
+# Create a systemd service to reboot the system on firstboot.
+# This is to clear out issues like the DHCP Network being different from the above configured Network
+cat <<EOF > /etc/systemd/system/firstbootreboot.service
+[Unit]
+Description=First Boot Reboot
+
+[Service]
+Type=oneshot
+ExecStart=rm /etc/systemd/system/firstbootreboot.service
+ExecStart=rm /etc/systemd/system/default.target.wants/firstbootreboot.service
+ExecStart=systemctl reboot
+
+[Install]
+WantedBy=default.target
+EOF
+systemctl enable firstbootreboot.service
