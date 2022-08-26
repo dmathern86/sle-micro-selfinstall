@@ -35,3 +35,9 @@ ExecStart=systemctl reboot
 WantedBy=default.target
 EOF
 systemctl enable firstbootreboot.service
+
+#install k3s
+mount /var
+mkdir -p /var/lib/rancher/k3s/agent/images/
+gunzip -c k3s-airgap-images-amd64.tar.gz > /var/lib/rancher/k3s/agent/images/k3s-airgap-images-amd64.tar
+umount /var
