@@ -36,8 +36,18 @@ WantedBy=default.target
 EOF
 systemctl enable firstbootreboot.service
 
-#install k3s
+#copy k3s container images
 mount /var
 mkdir -p /var/lib/rancher/k3s/agent/images/
 gunzip -c k3s-airgap-images-amd64.tar.gz > /var/lib/rancher/k3s/agent/images/k3s-airgap-images-amd64.tar
 umount /var
+
+#copy k3s binary
+mount /opt
+mkdir /opt/k3s
+cp k3s /opt/k3s/
+chmod 776 /opt/k3s/k3s
+
+#start k3s installation
+cp install.sh /opt/k3s/install.sh
+INSTALL_K3S_BIN_DIR=/opt/k3s INSTALL_K3S_SKIP_DOWNLOAD=true  /opt/k3s/install.sh
